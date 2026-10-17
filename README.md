@@ -37,7 +37,7 @@ An AI helper for making mobile games. It runs on your phone, so you don't need a
 
 ### 휴대폰에서 쓰는 방법
 
-1. 올린 주소를 휴대폰에서 엽니다. 안드로이드는 최신 **Chrome**, 아이폰은 **iOS 26 이상**의 **Safari**를 쓰세요.
+1. 올린 주소를 엽니다. 컴퓨터(Windows·Mac)와 안드로이드는 최신 **Chrome**이나 **Edge**, 아이폰은 **iOS 26 이상**의 **Safari**를 쓰세요. 시크릿 창은 피해 주세요.
 2. 처음 질문하면 AI 모델을 한 번 받습니다. **‘기본’ 모델은 약 1.1GB**이니 와이파이에서 받으세요.
 3. 받은 뒤로는 인터넷 없이도 답합니다.
 4. **설정 → 앱으로 설치**를 누르면 홈 화면에 아이콘이 생깁니다. 아이폰은 Safari의 공유 버튼 → **홈 화면에 추가**를 누르세요.
@@ -52,7 +52,7 @@ An AI helper for making mobile games. It runs on your phone, so you don't need a
 
 ### 앱을 고친 뒤 다시 올릴 때
 
-`sw.js` 맨 위의 `ondo-v1`을 `ondo-v2`처럼 숫자를 올려 주세요. 그래야 이미 설치한 휴대폰에도 새 버전이 들어갑니다.
+`sw.js` 맨 위의 `ondo-v2`를 `ondo-v3`처럼 숫자를 올려 주세요. 그래야 이미 설치한 휴대폰에도 새 버전이 들어갑니다.
 
 ---
 
@@ -88,7 +88,7 @@ The address must start with **https://**. That's what lets the AI run on the pho
 
 ### Using it on a phone
 
-1. Open your address on the phone. Use the latest **Chrome** on Android, or **Safari on iOS 26 or later** on iPhone.
+1. Open your address. On a computer (Windows, Mac) or Android, use the latest **Chrome** or **Edge**. On iPhone, use **Safari on iOS 26 or later**. Avoid private (incognito) windows.
 2. Your first question downloads an AI model once. **The Standard model is about 1.1 GB**, so use Wi-Fi.
 3. After that, Ondo answers without internet.
 4. Tap **Settings → Install as an app** to add an icon to your home screen. On iPhone, tap Safari's Share button → **Add to Home Screen**.
@@ -103,7 +103,7 @@ The address must start with **https://**. That's what lets the AI run on the pho
 
 ### After you change the app
 
-Bump `ondo-v1` at the top of `sw.js` (e.g. to `ondo-v2`) so phones that already installed Ondo get the new version.
+Bump `ondo-v2` at the top of `sw.js` (e.g. to `ondo-v3`) so phones that already installed Ondo get the new version.
 
 ### Try it on your computer (for developers)
 

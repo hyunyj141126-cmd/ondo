@@ -1,7 +1,7 @@
 // Ondo offline helper.
 // Keeps the app itself and its AI engine code on the phone so Ondo opens without internet.
 // The AI model files are stored separately by the AI engine the first time you download them.
-const VERSION = "ondo-v1";
+const VERSION = "ondo-v2";
 const CDN_CACHE = VERSION + "-cdn";
 const SHELL = [
   "./",

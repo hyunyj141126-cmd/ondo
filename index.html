@@ -254,6 +254,7 @@ svg.i{width:20px;height:20px;flex:none}
 :root[data-lang="ja"]{--serif:"Noto Serif JP", "Hiragino Mincho ProN", serif}
 :root[data-lang="zh"]{--serif:"Noto Serif SC", "Songti SC", serif}
 .m-meta{font-size:11.5px;color:var(--muted)}
+.err-detail{margin:0;font-family:var(--mono);font-size:11.5px;line-height:1.5;color:var(--muted);background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:8px 10px;white-space:pre-wrap;word-break:break-word;max-height:220px;overflow:auto}
 .m-desc{font-size:12.5px;color:var(--muted)}
 .opts.lang{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media (max-width:640px){.opts.lang{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -390,6 +391,11 @@ const LANGS = [
 ];
 const I18N = {
 en:{
+  err_storage:"Ondo couldn't save the AI model on this computer. Don't use a private (incognito) window, and make sure there's free disk space.",
+  err_no_adapter:"Your browser can't use this computer's graphics chip. Update Chrome or Edge and your graphics driver, then try again.",
+  blockedHost:"AI can't run inside this window. Open your Ondo web address in Chrome or Edge instead.",
+  showDetails:"Show details",
+  hideDetails:"Hide details",
   newChat:"New chat", recents:"Recents", noChats:"No chats yet.", settings:"Settings", del:"Delete", delAria:"Delete {title}",
   collapse:"Collapse sidebar", expand:"Expand sidebar", openSide:"Open sidebar",
   modeClaude:"Running in Claude", modeLocal:"Running on this device",
@@ -415,7 +421,7 @@ en:{
   runClaudeOk:"Running inside Claude. Claude answers here, so nothing needs to be downloaded.",
   runClaudeOff:"Opened inside Claude, but AI answers aren't allowed here.",
   runLocalOk:"Running on this device. No account or API key needed, and it works offline after the first download.",
-  runLocalNoGpu:"This browser can't run the AI on your phone. Try the latest Chrome (Android) or Safari on iOS 26 or later.",
+  runLocalNoGpu:"This browser can't run the AI by itself. On a computer or Android, use the latest Chrome or Edge. On iPhone, use Safari on iOS 26 or later.",
   localLabel:"AI models on this device", localHelp:"Download one once and it works without internet. If your phone is older, choose Quick or Standard.",
   storage:"Space used: {used} GB of {total} GB available.",
   installLabel:"Install as an app", installHelp:"Add Ondo to your home screen so it opens like a regular app.", installBtn:"Install Ondo",
@@ -426,9 +432,9 @@ en:{
   m_fast:"Quick", m_fast_d:"Small and fast. Good for short questions.", m_balanced:"Standard", m_balanced_d:"A good choice for most questions.",
   m_code:"Coder", m_code_d:"Best for writing and fixing code.", m_deep:"Thinker", m_deep_d:"Thinks before answering. For newer phones.",
   c_complex:"Thinker", c_complex_d:"Takes more time on hard problems", c_default:"Standard", c_default_d:"Good for most questions", c_quick:"Quick", c_quick_d:"Fastest for short questions",
-  dlTitle:"Ondo needs a one-time download ({name})", dlBody:"This saves {size} to your phone. Wi-Fi is recommended. After that, it works without internet.",
+  dlTitle:"Ondo needs a one-time download ({name})", dlBody:"This saves {size} to this device. Wi-Fi is recommended. After that, it works without internet.",
   dlGo:"Download and answer", dlSmall:"Use Quick instead ({size})",
-  pFetch:"Downloading", pCache:"Loading from your phone", pGpu:"Getting the AI ready", pPrep:"Getting ready",
+  pFetch:"Downloading", pCache:"Loading from this device", pGpu:"Getting the AI ready", pPrep:"Getting ready",
   thinking:"Thinking…", checking:"Checking…", preparing:"Getting ready…",
   copy:"Copy", copied:"Copied", copyFail:"Couldn't copy", regen:"New answer", retry:"Try again", changeModel:"Choose another model",
   stopped:"(Stopped)", truncated:"The answer was too long and got cut off. Send “continue” to keep going.",
@@ -438,10 +444,15 @@ en:{
   err_not_granted:"AI answers were not allowed. Reopen the page to allow them.", err_unavailable:"AI answers aren't available on this screen.",
   err_lib_failed:"Couldn't start the AI. You need internet the very first time.",
   err_download_failed:"The download didn't finish. Check your internet and try again. You only need internet the first time.",
-  err_oom:"Your phone ran out of memory. Close other apps or choose the Quick model.", err_no_f16:"This phone can't run this model. Please choose another one.",
+  err_oom:"This device ran out of memory. Close other apps or choose the Quick model.", err_no_f16:"This phone can't run this model. Please choose another one.",
   err_too_long:"This chat is too long for the AI to remember. Please start a new chat.", err_local_error:"Something went wrong. Try again or choose another model.",
 },
 ko:{
+  err_storage:"이 컴퓨터에 AI 모델을 저장하지 못했어요. 시크릿 창이 아닌 일반 창에서 열고, 저장 공간이 남아 있는지 확인해 주세요.",
+  err_no_adapter:"브라우저가 이 컴퓨터의 그래픽 장치를 쓰지 못하고 있어요. Chrome이나 Edge, 그리고 그래픽 드라이버를 최신으로 업데이트한 뒤 다시 해 주세요.",
+  blockedHost:"이 창 안에서는 AI를 실행할 수 없어요. 배포한 Ondo 웹 주소를 Chrome이나 Edge에서 열어 주세요.",
+  showDetails:"자세히 보기",
+  hideDetails:"접기",
   newChat:"새 대화", recents:"최근 대화", noChats:"아직 대화가 없어요.", settings:"설정", del:"삭제", delAria:"{title} 삭제",
   collapse:"메뉴 접기", expand:"메뉴 펼치기", openSide:"메뉴 열기",
   modeClaude:"Claude 안에서 실행 중", modeLocal:"이 기기에서 실행 중",
@@ -467,7 +478,7 @@ ko:{
   runClaudeOk:"Claude 안에서 실행 중이에요. 여기서는 Claude가 답하니 따로 받을 것이 없어요.",
   runClaudeOff:"Claude 안에서 열렸지만 이 화면에서는 AI 답변이 허용되지 않았어요.",
   runLocalOk:"이 기기에서 직접 실행 중이에요. 계정이나 API 키가 필요 없고, 처음 한 번 받은 뒤로는 인터넷 없이도 돼요.",
-  runLocalNoGpu:"이 브라우저에서는 휴대폰 안에서 AI를 돌릴 수 없어요. 안드로이드는 최신 Chrome, 아이폰은 iOS 26 이상의 Safari에서 열어 주세요.",
+  runLocalNoGpu:"이 브라우저에서는 AI를 직접 돌릴 수 없어요. 컴퓨터와 안드로이드는 최신 Chrome이나 Edge, 아이폰은 iOS 26 이상의 Safari에서 열어 주세요.",
   localLabel:"이 기기에 받은 AI 모델", localHelp:"한 번만 받아 두면 인터넷 없이 써요. 오래된 휴대폰이라면 ‘빠르게’나 ‘기본’을 고르세요.",
   storage:"사용 중인 공간: {used}GB / 쓸 수 있는 공간 {total}GB",
   installLabel:"앱으로 설치", installHelp:"홈 화면에 Ondo를 추가하면 일반 앱처럼 바로 열려요.", installBtn:"Ondo 설치하기",
@@ -478,9 +489,9 @@ ko:{
   m_fast:"빠르게", m_fast_d:"작고 빨라요. 짧은 질문에 좋아요.", m_balanced:"기본", m_balanced_d:"대부분의 질문에 알맞아요.",
   m_code:"코드", m_code_d:"코드 작성과 오류 고치기에 강해요.", m_deep:"깊이 생각", m_deep_d:"생각한 뒤 답해요. 최신 휴대폰에 알맞아요.",
   c_complex:"깊이 생각", c_complex_d:"어려운 문제를 오래 생각해서 답해요", c_default:"기본", c_default_d:"대부분의 질문에 알맞아요", c_quick:"빠르게", c_quick_d:"짧은 질문에 가장 빨라요",
-  dlTitle:"처음 한 번 ‘{name}’ 모델을 받아야 해요", dlBody:"휴대폰에 {size}를 저장해요. 와이파이에서 받는 걸 권해요. 받은 뒤로는 인터넷 없이 작동해요.",
+  dlTitle:"처음 한 번 ‘{name}’ 모델을 받아야 해요", dlBody:"이 기기에 {size}를 저장해요. 와이파이에서 받는 걸 권해요. 받은 뒤로는 인터넷 없이 작동해요.",
   dlGo:"받고 답하기", dlSmall:"대신 ‘빠르게’로 받기 ({size})",
-  pFetch:"받는 중", pCache:"휴대폰에서 불러오는 중", pGpu:"AI 준비 중", pPrep:"준비 중",
+  pFetch:"받는 중", pCache:"기기에서 불러오는 중", pGpu:"AI 준비 중", pPrep:"준비 중",
   thinking:"생각하는 중…", checking:"확인하는 중…", preparing:"준비하는 중…",
   copy:"복사", copied:"복사됨", copyFail:"복사 못 함", regen:"다른 답 받기", retry:"다시 시도", changeModel:"다른 모델 고르기",
   stopped:"(멈췄어요)", truncated:"답이 너무 길어서 중간에 끊겼어요. ‘계속’이라고 보내면 이어서 답해요.",
@@ -490,10 +501,15 @@ ko:{
   err_not_granted:"AI 답변을 허용하지 않았어요. 페이지를 다시 열면 허용할 수 있어요.", err_unavailable:"이 화면에서는 AI 답변을 쓸 수 없어요.",
   err_lib_failed:"AI를 시작하지 못했어요. 맨 처음에는 인터넷이 필요해요.",
   err_download_failed:"받기가 끝나지 않았어요. 인터넷을 확인하고 다시 해 주세요. 인터넷은 처음 한 번만 필요해요.",
-  err_oom:"휴대폰 메모리가 부족해요. 다른 앱을 닫거나 ‘빠르게’ 모델을 골라 주세요.", err_no_f16:"이 휴대폰에서는 이 모델을 돌릴 수 없어요. 다른 모델을 골라 주세요.",
+  err_oom:"기기 메모리가 부족해요. 다른 앱을 닫거나 ‘빠르게’ 모델을 골라 주세요.", err_no_f16:"이 휴대폰에서는 이 모델을 돌릴 수 없어요. 다른 모델을 골라 주세요.",
   err_too_long:"대화가 너무 길어서 AI가 다 기억하지 못해요. 새 대화를 시작해 주세요.", err_local_error:"문제가 생겼어요. 다시 시도하거나 다른 모델을 골라 주세요.",
 },
 ja:{
+  err_storage:"このパソコンに AI モデルを保存できませんでした。シークレットウィンドウではなく通常のウィンドウで開き、空き容量を確認してください。",
+  err_no_adapter:"ブラウザがこのパソコンのグラフィック機能を使えません。Chrome または Edge とグラフィックドライバーを最新にしてから、もう一度お試しください。",
+  blockedHost:"このウィンドウの中では AI を動かせません。公開した Ondo のアドレスを Chrome か Edge で開いてください。",
+  showDetails:"詳細を表示",
+  hideDetails:"閉じる",
   newChat:"新しいチャット", recents:"最近のチャット", noChats:"まだチャットはありません。", settings:"設定", del:"削除", delAria:"{title} を削除",
   collapse:"メニューを閉じる", expand:"メニューを開く", openSide:"メニューを開く",
   modeClaude:"Claude 内で実行中", modeLocal:"この端末で実行中",
@@ -519,7 +535,7 @@ ja:{
   runClaudeOk:"Claude 内で実行中です。ここでは Claude が答えるので、ダウンロードは不要です。",
   runClaudeOff:"Claude 内で開いていますが、この画面では AI の回答が許可されていません。",
   runLocalOk:"この端末で直接動いています。アカウントや API キーは不要で、最初のダウンロード後はオフラインでも使えます。",
-  runLocalNoGpu:"このブラウザではスマホの中で AI を動かせません。Android は最新の Chrome、iPhone は iOS 26 以降の Safari で開いてください。",
+  runLocalNoGpu:"このブラウザでは AI を直接動かせません。パソコンと Android は最新の Chrome か Edge、iPhone は iOS 26 以降の Safari で開いてください。",
   localLabel:"この端末の AI モデル", localHelp:"一度ダウンロードすればインターネットなしで使えます。古いスマホなら「はやい」か「標準」を選んでください。",
   storage:"使用中の容量：{used} GB / 利用可能 {total} GB",
   installLabel:"アプリとしてインストール", installHelp:"ホーム画面に追加すると、普通のアプリのように開けます。", installBtn:"Ondo をインストール",
@@ -530,9 +546,9 @@ ja:{
   m_fast:"はやい", m_fast_d:"小さくて速い。短い質問向け。", m_balanced:"標準", m_balanced_d:"ほとんどの質問に向いています。",
   m_code:"コード", m_code_d:"コードを書く・直すのが得意。", m_deep:"じっくり", m_deep_d:"考えてから答えます。新しいスマホ向け。",
   c_complex:"じっくり", c_complex_d:"難しい問題に時間をかけて答えます", c_default:"標準", c_default_d:"ほとんどの質問に向いています", c_quick:"はやい", c_quick_d:"短い質問に一番速い",
-  dlTitle:"最初に一度「{name}」モデルのダウンロードが必要です", dlBody:"スマホに {size} を保存します。Wi-Fi でのダウンロードがおすすめです。その後はインターネットなしで動きます。",
+  dlTitle:"最初に一度「{name}」モデルのダウンロードが必要です", dlBody:"この端末に {size} を保存します。Wi-Fi でのダウンロードがおすすめです。その後はインターネットなしで動きます。",
   dlGo:"ダウンロードして答える", dlSmall:"代わりに「はやい」を使う（{size}）",
-  pFetch:"ダウンロード中", pCache:"スマホから読み込み中", pGpu:"AI を準備中", pPrep:"準備中",
+  pFetch:"ダウンロード中", pCache:"端末から読み込み中", pGpu:"AI を準備中", pPrep:"準備中",
   thinking:"考えています…", checking:"確認しています…", preparing:"準備しています…",
   copy:"コピー", copied:"コピーしました", copyFail:"コピーできません", regen:"別の答え", retry:"もう一度", changeModel:"別のモデルを選ぶ",
   stopped:"（停止しました）", truncated:"答えが長すぎて途中で切れました。「続けて」と送ると続きを書きます。",
@@ -542,10 +558,15 @@ ja:{
   err_not_granted:"AI の回答が許可されていません。ページを開き直すと許可できます。", err_unavailable:"この画面では AI の回答を使えません。",
   err_lib_failed:"AI を起動できませんでした。最初の一回だけインターネットが必要です。",
   err_download_failed:"ダウンロードが完了しませんでした。インターネットを確認してもう一度お試しください。インターネットは最初の一回だけ必要です。",
-  err_oom:"スマホのメモリが足りません。ほかのアプリを閉じるか「はやい」モデルを選んでください。", err_no_f16:"このスマホではこのモデルを動かせません。別のモデルを選んでください。",
+  err_oom:"端末のメモリが足りません。ほかのアプリを閉じるか「はやい」モデルを選んでください。", err_no_f16:"このスマホではこのモデルを動かせません。別のモデルを選んでください。",
   err_too_long:"チャットが長すぎて AI が覚えきれません。新しいチャットを始めてください。", err_local_error:"問題が起きました。もう一度試すか、別のモデルを選んでください。",
 },
 zh:{
+  err_storage:"无法在这台电脑上保存 AI 模型。请不要使用无痕窗口，并确认还有可用的磁盘空间。",
+  err_no_adapter:"浏览器无法使用这台电脑的显卡。请把 Chrome 或 Edge 以及显卡驱动更新到最新后再试。",
+  blockedHost:"这个窗口里无法运行 AI。请在 Chrome 或 Edge 中打开你发布的 Ondo 网址。",
+  showDetails:"查看详情",
+  hideDetails:"收起",
   newChat:"新对话", recents:"最近对话", noChats:"还没有对话。", settings:"设置", del:"删除", delAria:"删除 {title}",
   collapse:"收起菜单", expand:"展开菜单", openSide:"打开菜单",
   modeClaude:"在 Claude 中运行", modeLocal:"在本设备上运行",
@@ -571,7 +592,7 @@ zh:{
   runClaudeOk:"正在 Claude 中运行。这里由 Claude 回答，不需要下载任何东西。",
   runClaudeOff:"已在 Claude 中打开，但此页面不允许 AI 回答。",
   runLocalOk:"正在本设备上直接运行。不需要账号或 API 密钥，第一次下载后可离线使用。",
-  runLocalNoGpu:"这个浏览器无法在手机上运行 AI。安卓请用最新版 Chrome，iPhone 请用 iOS 26 及以上的 Safari。",
+  runLocalNoGpu:"这个浏览器无法直接运行 AI。电脑和安卓请用最新版 Chrome 或 Edge，iPhone 请用 iOS 26 及以上的 Safari。",
   localLabel:"本设备上的 AI 模型", localHelp:"下载一次即可离线使用。手机较旧的话，请选“快速”或“标准”。",
   storage:"已用空间：{used} GB / 可用 {total} GB",
   installLabel:"安装为应用", installHelp:"添加到主屏幕后，可以像普通应用一样打开。", installBtn:"安装 Ondo",
@@ -582,9 +603,9 @@ zh:{
   m_fast:"快速", m_fast_d:"小而快，适合简短问题。", m_balanced:"标准", m_balanced_d:"适合大多数问题。",
   m_code:"代码", m_code_d:"擅长写代码和修错误。", m_deep:"深度思考", m_deep_d:"先思考再回答，适合较新的手机。",
   c_complex:"深度思考", c_complex_d:"对难题花更多时间", c_default:"标准", c_default_d:"适合大多数问题", c_quick:"快速", c_quick_d:"简短问题最快",
-  dlTitle:"需要先下载一次“{name}”模型", dlBody:"将在手机上保存 {size}，建议使用 Wi-Fi。之后无需网络即可使用。",
+  dlTitle:"需要先下载一次“{name}”模型", dlBody:"将在本设备上保存 {size}，建议使用 Wi-Fi。之后无需网络即可使用。",
   dlGo:"下载并回答", dlSmall:"改用“快速”（{size}）",
-  pFetch:"下载中", pCache:"从手机读取中", pGpu:"正在准备 AI", pPrep:"准备中",
+  pFetch:"下载中", pCache:"从本设备读取中", pGpu:"正在准备 AI", pPrep:"准备中",
   thinking:"思考中…", checking:"检查中…", preparing:"准备中…",
   copy:"复制", copied:"已复制", copyFail:"无法复制", regen:"换个回答", retry:"重试", changeModel:"换个模型",
   stopped:"（已停止）", truncated:"回答太长被截断了。发送“继续”可以接着写。",
@@ -594,10 +615,15 @@ zh:{
   err_not_granted:"没有允许 AI 回答。重新打开页面即可允许。", err_unavailable:"此页面无法使用 AI 回答。",
   err_lib_failed:"无法启动 AI。第一次使用需要联网。",
   err_download_failed:"下载没有完成。请检查网络后重试。只有第一次需要联网。",
-  err_oom:"手机内存不足。请关闭其他应用或选择“快速”模型。", err_no_f16:"这部手机无法运行该模型，请换一个。",
+  err_oom:"设备内存不足。请关闭其他应用或选择“快速”模型。", err_no_f16:"这部手机无法运行该模型，请换一个。",
   err_too_long:"对话太长，AI 记不住了。请开始新对话。", err_local_error:"出了点问题。请重试或换个模型。",
 },
 es:{
+  err_storage:"Ondo no pudo guardar el modelo de IA en este ordenador. No uses una ventana privada (incógnito) y comprueba que haya espacio libre.",
+  err_no_adapter:"Tu navegador no puede usar la tarjeta gráfica de este ordenador. Actualiza Chrome o Edge y el controlador gráfico, y vuelve a intentarlo.",
+  blockedHost:"La IA no puede funcionar dentro de esta ventana. Abre la dirección web de Ondo en Chrome o Edge.",
+  showDetails:"Ver detalles",
+  hideDetails:"Ocultar",
   newChat:"Nuevo chat", recents:"Recientes", noChats:"Aún no hay chats.", settings:"Ajustes", del:"Borrar", delAria:"Borrar {title}",
   collapse:"Ocultar menú", expand:"Mostrar menú", openSide:"Abrir menú",
   modeClaude:"Funcionando en Claude", modeLocal:"Funcionando en este dispositivo",
@@ -623,7 +649,7 @@ es:{
   runClaudeOk:"Funcionando dentro de Claude. Aquí responde Claude, así que no hay que descargar nada.",
   runClaudeOff:"Abierto dentro de Claude, pero aquí no se permiten respuestas de la IA.",
   runLocalOk:"Funcionando en este dispositivo. No necesitas cuenta ni clave de API, y funciona sin internet tras la primera descarga.",
-  runLocalNoGpu:"Este navegador no puede ejecutar la IA en tu teléfono. Usa la última versión de Chrome (Android) o Safari en iOS 26 o posterior.",
+  runLocalNoGpu:"Este navegador no puede ejecutar la IA directamente. En ordenador y Android usa la última versión de Chrome o Edge; en iPhone, Safari con iOS 26 o posterior.",
   localLabel:"Modelos de IA en este dispositivo", localHelp:"Descárgalo una vez y funciona sin internet. Si tu teléfono es antiguo, elige Rápido o Estándar.",
   storage:"Espacio usado: {used} GB de {total} GB disponibles.",
   installLabel:"Instalar como app", installHelp:"Añade Ondo a tu pantalla de inicio para abrirlo como una app normal.", installBtn:"Instalar Ondo",
@@ -634,9 +660,9 @@ es:{
   m_fast:"Rápido", m_fast_d:"Pequeño y veloz. Bueno para preguntas cortas.", m_balanced:"Estándar", m_balanced_d:"Buena opción para casi todo.",
   m_code:"Código", m_code_d:"El mejor para escribir y arreglar código.", m_deep:"Pensador", m_deep_d:"Piensa antes de responder. Para teléfonos recientes.",
   c_complex:"Pensador", c_complex_d:"Se toma más tiempo en problemas difíciles", c_default:"Estándar", c_default_d:"Bueno para casi todo", c_quick:"Rápido", c_quick_d:"El más rápido para preguntas cortas",
-  dlTitle:"Ondo necesita una descarga única ({name})", dlBody:"Se guardarán {size} en tu teléfono. Se recomienda Wi-Fi. Después funciona sin internet.",
+  dlTitle:"Ondo necesita una descarga única ({name})", dlBody:"Se guardarán {size} en este dispositivo. Se recomienda Wi-Fi. Después funciona sin internet.",
   dlGo:"Descargar y responder", dlSmall:"Usar Rápido ({size})",
-  pFetch:"Descargando", pCache:"Cargando desde tu teléfono", pGpu:"Preparando la IA", pPrep:"Preparando",
+  pFetch:"Descargando", pCache:"Cargando desde este dispositivo", pGpu:"Preparando la IA", pPrep:"Preparando",
   thinking:"Pensando…", checking:"Comprobando…", preparing:"Preparando…",
   copy:"Copiar", copied:"Copiado", copyFail:"No se pudo copiar", regen:"Otra respuesta", retry:"Reintentar", changeModel:"Elegir otro modelo",
   stopped:"(Detenido)", truncated:"La respuesta era demasiado larga y se cortó. Envía «continúa» para seguir.",
@@ -646,7 +672,7 @@ es:{
   err_not_granted:"No se permitieron las respuestas de la IA. Vuelve a abrir la página para permitirlas.", err_unavailable:"Las respuestas de la IA no están disponibles aquí.",
   err_lib_failed:"No se pudo iniciar la IA. La primera vez necesitas internet.",
   err_download_failed:"La descarga no terminó. Revisa tu conexión y vuelve a intentarlo. Solo necesitas internet la primera vez.",
-  err_oom:"Tu teléfono se quedó sin memoria. Cierra otras apps o elige el modelo Rápido.", err_no_f16:"Este teléfono no puede usar este modelo. Elige otro.",
+  err_oom:"Este dispositivo se quedó sin memoria. Cierra otras apps o elige el modelo Rápido.", err_no_f16:"Este teléfono no puede usar este modelo. Elige otro.",
   err_too_long:"Este chat es demasiado largo para que la IA lo recuerde. Empieza uno nuevo.", err_local_error:"Algo salió mal. Vuelve a intentarlo o elige otro modelo.",
 },
 };
@@ -718,6 +744,7 @@ const CL = (typeof window!=="undefined" && window.claude && typeof window.claude
 const HAS_USE = !!CL && typeof CL.use==="function";
 const HAS_COMPLETE = !!CL && typeof CL.complete==="function";
 const IN_CLAUDE = HAS_USE || HAS_COMPLETE;
+const HOST_NO_AI = !!CL && !IN_CLAUDE;   // inside a Claude window that offers no AI; downloads are blocked there too
 const HAS_GPU = typeof navigator!=="undefined" && !!navigator.gpu;
 
 let lang = store.get("ondo.lang","en"); if(!I18N[lang]) lang="en";
@@ -848,20 +875,43 @@ async function loadLib(){
   for(const u of WEBLLM_URLS){ try{ webllm = await import(u); return webllm; }catch(e){ lastErr=e; } }
   throw {code:"lib_failed", message:String(lastErr&&lastErr.message||lastErr)};
 }
-async function isCached(modelId){ try{ const lib=await loadLib(); return await lib.hasModelInCache(modelId); }catch{ return false; } }
+let appConfig=null, useF32=null;
+// Some setups (e.g. a file opened straight from disk) can't use the browser's Cache storage; fall back to IndexedDB.
+async function getAppConfig(){
+  if(appConfig) return appConfig;
+  const lib=await loadLib();
+  let backend="cache";
+  try{ if(typeof caches==="undefined") throw 0; await caches.open("ondo-probe"); await caches.delete("ondo-probe"); }catch{ backend="indexeddb"; }
+  appConfig=Object.assign({}, lib.prebuiltAppConfig, {cacheBackend:backend});
+  return appConfig;
+}
+// Many Windows graphics chips lack 16-bit float support; use the 32-bit build of each model there.
+async function checkGpu(){
+  if(useF32!==null) return;
+  if(!HAS_GPU) throw {code:"no_webgpu"};
+  let adapter=null;
+  try{ adapter=await navigator.gpu.requestAdapter(); }catch(e){ throw {code:"no_adapter", message:String(e&&e.message||e)}; }
+  if(!adapter) throw {code:"no_adapter", message:"navigator.gpu.requestAdapter() returned null"};
+  useF32 = !adapter.features.has("shader-f16");
+}
+const idFor = m => useF32 ? m.model.replace("q4f16_1","q4f32_1") : m.model;
+async function isCached(m){ try{ await checkGpu(); const lib=await loadLib(); return await lib.hasModelInCache(idFor(m), await getAppConfig()); }catch{ return false; } }
 function ensureModel(m){
   if(!HAS_GPU) return Promise.reject({code:"no_webgpu"});
-  if(engine && loadedModel===m.model) return Promise.resolve(engine);
-  if(loadPromise && loadingModel===m.model) return loadPromise;
-  loadingModel=m.model;
+  if(engine && useF32!==null && loadedModel===idFor(m)) return Promise.resolve(engine);
+  if(loadPromise && loadingModel===m.id) return loadPromise;
+  loadingModel=m.id;
   const job = (async()=>{
+    await checkGpu();
     const lib = await loadLib();
+    const cfg = await getAppConfig();
     const cb = r => { if(progressSink) progressSink(r); };
-    if(!engine) engine = new lib.MLCEngine({initProgressCallback: cb});
+    if(!engine) engine = new lib.MLCEngine({appConfig: cfg, initProgressCallback: cb});
     else engine.setInitProgressCallback(cb);
     try{ if(navigator.storage && navigator.storage.persist) await navigator.storage.persist(); }catch{}
     let lock=null; try{ lock = await navigator.wakeLock?.request("screen"); }catch{}
-    try{ loadedModel=null; await engine.reload(m.model); loadedModel=m.model; }
+    try{ loadedModel=null; await engine.reload(idFor(m)); loadedModel=idFor(m); }
+    catch(e){ try{ await engine.unload(); }catch{} engine=null; loadedModel=null; throw e; }   // start clean next time
     finally{ try{ await lock?.release(); }catch{} }
     return engine;
   })();
@@ -871,12 +921,16 @@ function ensureModel(m){
 }
 function localError(e){
   if(e && e.code) return e;
-  const msg = String(e && e.message || e || "");
-  if(/context window|exceed|prompt.*too long/i.test(msg)) return {code:"too_long", message:msg};
-  if(/out of memory|OOM|allocate|device (was )?lost|GPUDevice|maxBuffer|limits/i.test(msg)) return {code:"oom", message:msg};
-  if(/fetch|network|Failed to load|NetworkError|cache/i.test(msg)) return {code:"download_failed", message:msg};
-  if(/shader-f16|f16/i.test(msg)) return {code:"no_f16", message:msg};
-  return {code:"local_error", message:msg};
+  const name = String(e && e.name || ""), msg = String(e && e.message || e || "");
+  const r = code => ({code, message:(name?name+": ":"")+msg});
+  if(/WebGPUNot(Available|Found)Error/.test(name)) return r("no_webgpu");
+  if(/ShaderF16|FeatureSupport/.test(name) || /shader-f16/.test(msg)) return r("no_f16");
+  if(/ContextWindowSizeExceeded/.test(name) || /context window/i.test(msg)) return r("too_long");
+  if(/DeviceLost/.test(name) || /out of memory|\bOOM\b|device (was )?lost/i.test(msg)) return r("oom");
+  if(/QuotaExceeded|SecurityError/.test(name) || /quota|insecure|security/i.test(msg)) return r("storage");
+  if(/Failed to fetch|NetworkError|Load failed|ERR_|network|status 4\d\d|status 5\d\d/i.test(msg)) return r("download_failed");
+  if(/allocate|maxBuffer|maxStorage|exceeds the limit/i.test(msg)) return r("oom");
+  return r("local_error");
 }
 function trimForLocal(turns, budget){
   const out=[]; let used=0;
@@ -940,6 +994,7 @@ function renderLangOpts(){
 function refreshNotice(){
   notice.innerHTML="";
   if(IN_CLAUDE && sampleState==="off"){ notice.hidden=false; notice.textContent=t("err_unavailable"); }
+  else if(HOST_NO_AI){ notice.hidden=false; notice.textContent=t("blockedHost"); }
   else if(!IN_CLAUDE && !HAS_GPU){ notice.hidden=false; notice.textContent=t("runLocalNoGpu"); }
   else notice.hidden=true;
   $("modeTag").textContent = t(IN_CLAUDE ? "modeClaude" : "modeLocal");
@@ -1002,6 +1057,14 @@ function render(){
     const a=n.querySelector(".actions"); a.hidden=false;
     a.appendChild(actionBtn("i-retry",t("retry"),retry));
     if(c.errModel) a.appendChild(actionBtn("i-gear",t("changeModel"),openSettings));
+    if(c.errDetail){
+      const pre=document.createElement("pre"); pre.className="err-detail"; pre.hidden=true; pre.textContent=c.errDetail;
+      const db=actionBtn("i-doc",t("showDetails"),()=>{ pre.hidden=!pre.hidden; db.querySelector("span").textContent=t(pre.hidden?"showDetails":"hideDetails"); });
+      a.appendChild(db);
+      const cp=actionBtn("i-copy",t("copy"),()=>copyText(c.errDetail, cp.querySelector("span"))); cp.hidden=true; a.appendChild(cp);
+      db.addEventListener("click",()=>{ cp.hidden=pre.hidden; });
+      n.querySelector(".col")||n.appendChild(pre);
+    }
     thread.appendChild(n);
   }
   toBottom(true);
@@ -1024,9 +1087,9 @@ function progressLabel(r){
 /* ================= model menu ================= */
 let cachedSet = new Set();
 async function refreshCached(){
-  if(IN_CLAUDE || !HAS_GPU) return;
-  const res = await Promise.all(LOCAL_MODELS.map(m=>isCached(m.model)));
-  cachedSet = new Set(LOCAL_MODELS.filter((m,i)=>res[i]).map(m=>m.model));
+  if(IN_CLAUDE || HOST_NO_AI || !HAS_GPU) return;
+  const res = await Promise.all(LOCAL_MODELS.map(m=>isCached(m)));
+  cachedSet = new Set(LOCAL_MODELS.filter((m,i)=>res[i]).map(m=>m.id));
 }
 function renderModel(){
   modelMenu.innerHTML="";
@@ -1036,7 +1099,7 @@ function renderModel(){
   } else {
     modelLabel.textContent=t("m_"+localModel().id);
     for(const x of LOCAL_MODELS){
-      const tag = loadedModel===x.model ? t("rowInUse") : cachedSet.has(x.model) ? t("rowDownloaded") : x.size;
+      const tag = loadedModel && loadedModel===idFor(x) ? t("rowInUse") : cachedSet.has(x.id) ? t("rowDownloaded") : x.size;
       modelMenu.appendChild(menuItem(t("m_"+x.id), t("m_"+x.id+"_d"), x.id===localId, tag, ()=>{ localId=x.id; store.set("ondo.local",localId); }));
     }
   }
@@ -1108,33 +1171,33 @@ let rowBusy=null;
 async function openSettings(){
   renderLangOpts();
   const st=$("runStatus");
-  const ok = IN_CLAUDE ? sampleState!=="off" : HAS_GPU;
+  const ok = IN_CLAUDE ? sampleState!=="off" : (HAS_GPU && !HOST_NO_AI);
   st.innerHTML=`<span class="dot${ok?"":" off"}"></span><span></span>`;
-  st.lastChild.textContent = t(IN_CLAUDE ? (sampleState==="off"?"runClaudeOff":"runClaudeOk") : (HAS_GPU?"runLocalOk":"runLocalNoGpu"));
-  $("localField").hidden = IN_CLAUDE || !HAS_GPU;
+  st.lastChild.textContent = t(IN_CLAUDE ? (sampleState==="off"?"runClaudeOff":"runClaudeOk") : HOST_NO_AI ? "blockedHost" : (HAS_GPU?"runLocalOk":"runLocalNoGpu"));
+  $("localField").hidden = IN_CLAUDE || HOST_NO_AI || !HAS_GPU;
   renderInstall();
   wipeArmed=false; $("wipeBtn").textContent=t("wipe");
   app.classList.remove("nav-open"); openSheet("setSheet");
-  if(!IN_CLAUDE && HAS_GPU){ renderModelList(); await refreshCached(); renderModelList(); storageInfo(); }
+  if(!IN_CLAUDE && !HOST_NO_AI && HAS_GPU){ renderModelList(); await refreshCached(); renderModelList(); storageInfo(); }
 }
 function renderModelList(){
   const box=$("mlist"); box.innerHTML="";
   for(const m of LOCAL_MODELS){
     const row=document.createElement("div"); row.className="mrow";
-    const has=cachedSet.has(m.model), inUse=loadedModel===m.model, sel=m.id===localId;
+    const has=cachedSet.has(m.id), inUse=!!loadedModel&&loadedModel===idFor(m), sel=m.id===localId;
     row.innerHTML=`<div class="m-txt"><b></b><span class="m-desc"></span><span class="m-meta"></span><div class="bar" hidden><i></i></div><span class="bar-txt" hidden></span></div><div class="mrow-act"></div>`;
     row.querySelector("b").textContent=t("m_"+m.id);
     row.querySelector(".m-desc").textContent=t("m_"+m.id+"_d");
     row.querySelector(".m-meta").textContent=t("rowMeta",{size:m.size,mem:m.mem})+" · "+m.label;
     const act=row.querySelector(".mrow-act");
     const tag=(txt)=>{ const s=document.createElement("span"); s.className="tag"; s.textContent=txt; act.appendChild(s); };
-    if(rowBusy===m.model){ row.querySelector(".bar").hidden=false; const bt=row.querySelector(".bar-txt"); bt.hidden=false; bt.textContent=t("rowPreparing"); }
+    if(rowBusy===m.id){ row.querySelector(".bar").hidden=false; const bt=row.querySelector(".bar-txt"); bt.hidden=false; bt.textContent=t("rowPreparing"); }
     if(has || inUse){
       tag(t(inUse?"rowInUse":sel?"rowSelected":"rowDownloaded"));
       if(!sel){ const u=document.createElement("button"); u.type="button"; u.className="btn sm"; u.textContent=t("rowUse"); u.onclick=()=>{ localId=m.id; store.set("ondo.local",localId); renderModel(); renderModelList(); }; act.appendChild(u); }
       const d=document.createElement("button"); d.type="button"; d.className="btn sm danger"; d.textContent=t("rowDelete"); d.disabled=!!(busy||rowBusy);
       d.onclick=async()=>{ if(busy||rowBusy) return; if(d.dataset.armed!=="1"){ d.dataset.armed="1"; d.textContent=t("rowDeleteConfirm"); return; }
-        try{ if(inUse && engine){ await engine.unload(); loadedModel=null; } const lib=await loadLib(); await lib.deleteModelAllInfoInCache(m.model); }catch{}
+        try{ if(inUse && engine){ await engine.unload(); loadedModel=null; } const lib=await loadLib(); await lib.deleteModelAllInfoInCache(idFor(m), await getAppConfig()); }catch{}
         await refreshCached(); renderModelList(); renderModel(); storageInfo(); };
       act.appendChild(d);
     } else {
@@ -1148,11 +1211,11 @@ function renderModelList(){
 }
 async function downloadFromSettings(m){
   if(rowBusy||busy) return;
-  rowBusy=m.model; localId=m.id; store.set("ondo.local",localId); renderModel(); renderModelList();
+  rowBusy=m.id; localId=m.id; store.set("ondo.local",localId); renderModel(); renderModelList();
   const rowNow=$("mlist").children[LOCAL_MODELS.indexOf(m)];
   progressSink = r => { if(!rowNow) return; const b=rowNow.querySelector(".bar"), x=rowNow.querySelector(".bar-txt"); b.hidden=false; x.hidden=false; b.firstChild.style.width=pct(r)+"%"; x.textContent=`${progressLabel(r)} ${pct(r)}%`; };
   try{ await ensureModel(m); }
-  catch(e){ const er=localError(e); if(rowNow){ const x=rowNow.querySelector(".bar-txt"); x.hidden=false; x.textContent=t(errKey(er.code)); } rowBusy=null; progressSink=null; return; }
+  catch(e){ const er=localError(e); if(rowNow){ const x=rowNow.querySelector(".bar-txt"); x.hidden=false; x.textContent=t(errKey(er.code))+(er.message?"\n"+er.message:""); x.style.whiteSpace="pre-wrap"; } rowBusy=null; progressSink=null; return; }
   rowBusy=null; progressSink=null; await refreshCached(); renderModelList(); renderModel(); storageInfo();
 }
 async function storageInfo(){
@@ -1171,8 +1234,8 @@ $("wipeBtn").onclick=()=>{
 
 /* ================= sending ================= */
 const FATAL=new Set(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed","unavailable"]);
-const KNOWN_ERR=new Set(["rate_limited","session_expired","refused","empty_completion","prompt_too_large","upstream_error","no_webgpu","lib_failed","download_failed","oom","no_f16","too_long","local_error"]);
-function errKey(code){ if(code==="no_webgpu") return "runLocalNoGpu"; return "err_"+(KNOWN_ERR.has(code)?code:(IN_CLAUDE?"upstream_error":"local_error")); }
+const KNOWN_ERR=new Set(["rate_limited","session_expired","refused","empty_completion","prompt_too_large","upstream_error","no_webgpu","lib_failed","download_failed","oom","no_f16","too_long","local_error","storage","no_adapter"]);
+function errKey(code){ if(code==="no_webgpu") return "runLocalNoGpu"; if(code==="blocked_host") return "blockedHost"; return "err_"+(KNOWN_ERR.has(code)?code:(IN_CLAUDE?"upstream_error":"local_error")); }
 function setBusy(b){ busy=b; sendBtn.innerHTML=icon(b?"i-stop":"i-up"); sendBtn.setAttribute("aria-label",t(b?"stop":"send")); updateSend(); }
 function updateSend(){ sendBtn.disabled = busy ? false : !input.value.trim(); }
 
@@ -1191,7 +1254,7 @@ function askDownload(box, m, signal){
 }
 
 async function run(c){
-  c.err=null; c.errModel=false;
+  c.err=null; c.errModel=false; c.errDetail="";
   const node=aiNode(), box=node.querySelector(".md");
   const status = key => { box.innerHTML=`<div class="thinking"><svg class="spin"><use href="#i-arc"/></svg><span></span></div>`; box.querySelector("span").textContent=t(key); };
   status("thinking");
@@ -1209,11 +1272,13 @@ async function run(c){
     let result;
     if(IN_CLAUDE) result = await claudeGenerate(turns, onText, ctl.signal);
     else {
+      if(HOST_NO_AI) throw {code:"blocked_host"};
       if(!HAS_GPU) throw {code:"no_webgpu"};
       let m=localModel();
-      if(loadedModel!==m.model){
+      await checkGpu();
+      if(loadedModel!==idFor(m)){
         status("checking");
-        if(!(await isCached(m.model))) m = await askDownload(box, m, ctl.signal);
+        if(!(await isCached(m))) m = await askDownload(box, m, ctl.signal);
         status("preparing");
         progressSink = r => { box.innerHTML=`<div class="dl"><span class="bar-txt"></span><div class="bar"><i style="width:${pct(r)}%"></i></div></div>`; box.querySelector(".bar-txt").textContent=`${progressLabel(r)} ${pct(r)}%`; };
         const aborted = new Promise((_,rej)=>ctl.signal.addEventListener("abort",()=>rej({code:"cancelled"}),{once:true}));
@@ -1233,7 +1298,8 @@ async function run(c){
     const partial = code!=="refused" ? (er.text||"") : "";
     if(partial) c.turns.push({role:"assistant",content:partial, stopped: code==="cancelled"});
     if(IN_CLAUDE && FATAL.has(code)){ sampleState="off"; refreshNotice(); c.err = code==="not_granted" ? "err_not_granted" : "err_unavailable"; }
-    else if(code!=="cancelled"){ c.err = errKey(code); c.errModel = !IN_CLAUDE && ["oom","no_f16","local_error"].includes(code); }
+    else if(code!=="cancelled"){ c.err = errKey(code); c.errModel = !IN_CLAUDE && ["oom","no_f16","local_error"].includes(code);
+      c.errDetail = [er.message, `[${code}] ${navigator.userAgent}`, `secure=${window.isSecureContext} protocol=${location.protocol} gpu=${HAS_GPU} f32=${useF32} cache=${appConfig?appConfig.cacheBackend:"-"}`].filter(Boolean).join("\n"); }
   }finally{
     ctl=null; setBusy(false); c.updated=Date.now(); save(); render();
     if(!mobileMQ.matches) input.focus();
